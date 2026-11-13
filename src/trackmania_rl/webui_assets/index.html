@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TrackMania · Atelier</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="mark">T<span>.</span></span><div>TRACKMANIA <small>ATELIER RL</small></div></div>
+      <nav aria-label="Navigation principale">
+        <button type="button" data-page="overview" class="active">Vue d'ensemble</button>
+        <button type="button" data-page="train">Entraînement</button>
+        <button type="button" data-page="models">Modèles & conduite</button>
+        <button type="button" data-page="compare">Comparaison</button>
+        <button type="button" data-page="configs">Configurations</button>
+      </nav>
+      <div class="sidebar-bottom"><span id="connection-dot" class="dot"></span><span id="connection">Interface locale</span><small>127.0.0.1 uniquement</small></div>
+    </aside>
+    <main>
+      <header class="topbar"><div><span class="eyebrow">PILOTAGE LOCAL / J4</span><h1 id="page-title">Vue d'ensemble</h1></div><div id="controller-badge" class="status-badge">Jeu libre</div></header>
+      <div id="notice" role="status" aria-live="polite" hidden></div>
+      <section id="overview" class="page active">
+        <div class="intro"><h2>Votre espace de travail.</h2><p>Runs, checkpoints et évaluations au même endroit. Rien ne démarre sans action de votre part.</p></div>
+        <div id="summary-cards" class="metrics"></div>
+        <div class="section-head"><div><h2>Runs</h2><p>État actualisé automatiquement.</p></div><button id="refresh" class="secondary">Actualiser</button></div>
+        <div id="runs-table" class="table-wrap"></div>
+        <div class="split">
+          <article class="panel"><div class="panel-head"><h3>Run sélectionné</h3><span id="run-phase" class="pill">—</span></div><select id="run-picker" aria-label="Choisir un run"></select><div id="run-detail" class="run-detail empty">Sélectionnez un run pour voir les données.</div><div class="trend-tools"><label>Tranches de tendance<input id="trend-slices" type="number" value="5" min="1" max="50" step="1"></label><button id="trend-button" class="quiet" type="button">Détail</button></div><div id="trend-result"></div></article>
+          <article class="panel"><div class="panel-head"><h3>Journal & état</h3><button id="log-refresh" class="quiet">Actualiser</button></div><pre id="job-log" class="log">Aucune commande lancée depuis cette interface.</pre><p class="hint">Les commandes continuent après fermeture de l'onglet. STOP termine proprement l'entraînement.</p></article>
+        </div>
+      </section>
+      <section id="train" class="page">
+        <div class="intro"><h2>Nouvel entraînement.</h2><p>Choisissez une configuration. Le jeu doit déjà être ouvert sur la map indiquée avec TMInterface actif.</p></div>
+        <div class="split wide-left">
+          <form id="train-form" class="panel form-panel">
+            <div class="panel-head"><h3>Démarrer un run</h3><span class="pill">1 contrôleur à la fois</span></div>
+            <label>Configuration<select id="train-config" required></select></label>
+            <div id="train-config-summary" class="context"></div>
+            <div class="form-grid"><label>Vitesse de simulation (×)<input id="train-speed" type="number" min="0.1" max="10" step="0.1" placeholder="Valeur de la configuration"></label><label>Budget total (transitions)<input id="train-budget" type="number" min="1" step="1" placeholder="Valeur de la configuration"></label></div>
+            <label class="check"><input id="train-unlimited" type="checkbox">Sans limite, jusqu'à mon arrêt explicite</label>
+            <label class="check"><input id="train-trace" type="checkbox">Tracer tous les échanges du pont (fichier volumineux)</label>
+            <button class="primary" type="submit">Lancer l'entraînement</button>
+          </form>
+          <article class="panel"><h3>Reprendre un run</h3><p>Recharge le dernier checkpoint avec poids, normalisation, optimiseur et replay buffer. Nouveau départ normal.</p><label>Run<select id="resume-run"></select></label><div class="form-grid"><label>Budget total cible<input id="resume-budget" type="number" min="1" step="1" placeholder="Budget de la configuration"></label><label>Vitesse (×)<input id="resume-speed" type="number" min="0.1" max="10" step="0.1" placeholder="Valeur de la configuration"></label></div><label class="check"><input id="resume-unlimited" type="checkbox">Poursuivre sans plafond</label><label class="check"><input id="resume-trace" type="checkbox">Tracer le pont</label><button id="resume-button" class="secondary" type="button">Reprendre</button><hr><h3>Arrêt propre</h3><p>Le run finit sa transition, écrit un checkpoint et relâche les commandes.</p><button id="stop-button" class="danger" type="button">Arrêter le run sélectionné</button></article>
+        </div>
+      </section>
+      <section id="models" class="page">
+        <div class="intro"><h2>Voir le modèle conduire.</h2><p>Politique figée, sans apprentissage. Une course à vitesse ×1 en temps réel par défaut.</p></div>
+        <div class="split wide-left">
+          <form id="eval-form" class="panel form-panel"><h3>Évaluation</h3><label>Run<select id="eval-run"></select></label><label>Checkpoint<select id="eval-checkpoint"></select></label><div class="form-grid"><label>Courses<input id="eval-episodes" type="number" value="1" min="1" max="10000" step="1" required></label><label>Vitesse (×)<input id="eval-speed" type="number" value="1" min="0.1" max="10" step="0.1" required></label><label>Mode<select id="eval-mode"><option value="realtime">Temps réel</option><option value="sync">Synchrone (diagnostic)</option></select></label><label>Premier numéro d'épisode<input id="eval-first" type="number" value="900001" min="1" step="1" required></label></div><label class="check"><input id="eval-official" type="checkbox">Arrivée non empêchée (relance manuelle après une arrivée)</label><label class="check"><input id="eval-trace" type="checkbox">Tracer le pont</label><button class="primary" type="submit">Charger et voir conduire</button><p class="hint">A01 doit être ouverte manuellement. ×1 temps réel ne prouve pas qu'un chrono officiel a été enregistré ; vérifier dans le jeu.</p></form>
+          <article class="panel"><h3>Historique des évaluations</h3><div id="eval-history" class="history empty">Sélectionnez un run.</div><hr><h3>TensorBoard</h3><p>Métriques détaillées : récompenses, pertes, entropie, latence et débit.</p><div class="actions"><button id="tensor-start" class="secondary">Ouvrir TensorBoard</button><button id="tensor-stop" class="quiet">Arrêter</button></div><div id="tensor-state" class="hint"></div></article>
+        </div>
+      </section>
+      <section id="compare" class="page">
+        <div class="intro"><h2>Comparer des expériences.</h2><p>Budget commun, seeds et différences de configuration vérifiés. Épisodes d'entraînement ≠ évaluation figée.</p></div><div class="panel"><h3>Sélection des runs</h3><div id="compare-list" class="compare-list"></div><label class="short-field">Dernière fraction des transitions<input id="compare-fraction" type="number" value="0.2" min="0.01" max="1" step="0.01"></label><button id="compare-button" class="secondary">Comparer</button><div id="compare-result"></div></div>
+      </section>
+      <section id="configs" class="page">
+        <div class="intro"><h2>Configurations.</h2><p>Copie non destructive. Chaque nouveau fichier garde les paramètres exacts de son expérience.</p></div>
+        <div class="split wide-left"><article class="panel form-panel"><label>Partir d'une configuration<select id="edit-config"></select></label><div class="form-grid"><label>Identifiant du nouveau fichier<input id="new-config-id" required pattern="[A-Za-z0-9][A-Za-z0-9_.-]*" placeholder="a01_mon_essai"></label><label>Nom du run<input id="config-name" pattern="[A-Za-z0-9][A-Za-z0-9_.-]*"></label><label>Seed<input id="config-seed" type="number" min="0" step="1"></label><label>Vitesse (×)<input id="config-speed" type="number" min="0.1" max="10" step="0.1"></label><label>Budget de départ<input id="config-budget" type="number" min="1" step="1"></label><label>Plafond de transitions<input id="config-cap" type="number" min="1" step="1"></label><label>Intervalle des checkpoints<input id="config-checkpoint" type="number" min="1" step="1"></label><label>Encodage des actions<select id="config-codec"><option value="threshold_v1">Seuil continu</option><option value="hybrid4_v1">Hybride</option><option value="argmax4_v1">Argmax4 (relaxation)</option></select></label></div><h3 class="subheading">Récompense</h3><div class="form-grid"><label>Progression<select id="reward-mode"><option value="delta">Différence directe (v2)</option><option value="potential">Potentiel (v1)</option></select></label><label>Échelle de progression<input id="reward-progress" type="number" min="0" step="any"></label><label>Coût du temps / seconde<input id="reward-time" type="number" min="0" step="any"></label><label>Bonus d'arrivée<input id="reward-finish" type="number" min="0" step="any"></label><label>Actualisation / seconde<input id="reward-discount" type="number" min="0.000001" max="1" step="any"></label></div><button id="save-config" class="primary" type="button">Enregistrer une nouvelle configuration</button></article><article class="panel advanced"><h3>Paramètres avancés</h3><p>Le JSON ci-dessous donne aussi accès à SAC, au learner, aux actions, aux budgets et aux paramètres du pont. Toute modification y reste visible.</p><textarea id="config-json" spellcheck="false" aria-label="Configuration JSON complète"></textarea><p id="json-error" class="error-text"></p><p class="hint">Une modification du modèle ou de la récompense crée un nouveau run. Une reprise ne change pas les paramètres sauvegardés du run.</p></article></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

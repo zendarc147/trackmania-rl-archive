@@ -1,0 +1,40 @@
+{
+  "name": "a01_sac_hybrid4_v1_seed2",
+  "description": "J4 D25 true hybrid SAC: reparameterized Gaussian steer plus categorical distribution over four gas/brake pairs; exact four-command expectation. Proposed comparison against threshold with same seed, transitions, and other parameters. Seed 2 replicate for D25; torch_threads 4 to match the seed 1 runs of 2026-09-29.",
+  "map": "configs/maps/a01.json",
+  "action_codec": "hybrid4_v1",
+  "action_ticks": 5,
+  "speed": 10,
+  "action_timeout_ms": 1000,
+  "seed": 2,
+  "torch_threads": 4,
+  "budget": {
+    "transitions": 69000,
+    "cap_transitions": 69000,
+    "note": "Bounded proposal. Global J4 ceilings lifted by user on 2026-09-29; user starts long run (D37). Compare against threshold at equal transitions and seed."
+  },
+  "checkpoint_every_transitions": 10000,
+  "log_transitions": true,
+  "reward": {
+    "progress_scale": 100.0,
+    "time_cost_per_s": 1.0,
+    "finish_bonus": 150.0,
+    "discount_per_second": 0.98,
+    "terminal_potential": "zero"
+  },
+  "reward_status": "trackmania_rl.reward/1 coefficients are a J3 PROPOSITION (J3-02), not approved",
+  "sac": {
+    "net_arch": [
+      256,
+      256
+    ],
+    "learning_rate": 0.0003,
+    "buffer_size": 100000,
+    "learning_starts": 2000,
+    "batch_size": 256,
+    "tau": 0.005,
+    "train_freq": 1,
+    "gradient_steps": 1,
+    "ent_coef": "auto"
+  }
+}

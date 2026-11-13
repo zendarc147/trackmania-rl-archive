@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Open the local workshop, or start it if it is not already running.
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+address=http://127.0.0.1:8765
+if curl --silent --show-error --fail --max-time 1 "$address/api/overview" >/dev/null 2>&1; then
+    xdg-open "$address"
+else
+    exec env PYTHONPATH=src uv run python -m trackmania_rl.webui --open
+fi

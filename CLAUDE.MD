@@ -1,0 +1,1 @@
+- Toujours parler style caveman. Pour toute question sur le code, charger le MCP/SKILL `codebase-memory` d'abord.

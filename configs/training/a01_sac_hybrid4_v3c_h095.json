@@ -1,0 +1,56 @@
+{
+  "name": "a01_sac_hybrid4_v3c_h095",
+  "description": "Restart from a01_sac_hybrid4_v3b_h095 checkpoint 00050195 (critic loss ~0.09, 18-20 finishes per 20), after v3b repeated the v3 divergence about 55k transitions after its start (critic loss 0.09 -> 0.40). v2 diverged too (500-700k and 1.9M, recovered), so the cause is not the discount alone. Two changes approved by the user on 2026-10-01 (J4-13): replay buffer 100k -> 1M (100k held only the last ~140 episodes, ~12 min wall; previous buffer copied in) and learning rate 3e-4 -> 1e-4. Discount kept at 0.95/s (horizon ~20 s). Checkpoints every 250k transitions (disk: up to ~230 MB each with a full buffer). Proposition, not validated.",
+  "map": "configs/maps/a01.json",
+  "action_codec": "hybrid4_v1",
+  "action_ticks": 5,
+  "speed": 10,
+  "action_timeout_ms": 1000,
+  "seed": 1,
+  "torch_threads": 8,
+  "budget": {
+    "transitions": 1000000,
+    "cap_transitions": 4000000,
+    "note": "1 000 000 transitions = 13.9 h simulated, ~2 h wall at ~130 trans/s. Stop when train/critic_loss stays above ~0.2."
+  },
+  "checkpoint_every_transitions": 250000,
+  "log_transitions": true,
+  "reward": {
+    "progress_mode": "delta",
+    "progress_scale": 100.0,
+    "time_cost_per_s": 1.0,
+    "finish_bonus": 20.0,
+    "discount_per_second": 0.95,
+    "terminal_potential": "zero"
+  },
+  "reward_status": "trackmania_rl.reward/2, user request of 2026-09-30 (progress along the reference + constant cost per second); weights proposed in DECISIONS J4-07, not validated by a learning result; discount 0.95/s approved by the user on 2026-09-30 (J4-11)",
+  "sac": {
+    "net_arch": [
+      256,
+      256
+    ],
+    "learning_rate": 0.0001,
+    "buffer_size": 1000000,
+    "learning_starts": 2000,
+    "batch_size": 256,
+    "tau": 0.005,
+    "ent_coef": "auto_0.1",
+    "hybrid_target_entropy": [
+      -0.5,
+      0.4159
+    ],
+    "hybrid_critic": "q4"
+  },
+  "learner": {
+    "mode": "async",
+    "updates_per_transition": 0.5,
+    "max_update_lag": 32,
+    "max_wait_ms": 250,
+    "actor_sync_every": 1,
+    "chunk": 4
+  },
+  "init_from": {
+    "run": "runs/j4/20261001-130312-a01_sac_hybrid4_v3b_h095",
+    "checkpoint": "00050195"
+  }
+}

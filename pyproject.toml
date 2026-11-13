@@ -1,0 +1,21 @@
+[project]
+name = "trackmania"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "gymnasium>=1.0,<2",
+    "stable-baselines3>=2.9,<3",
+    "tensorboard>=2.20",
+    "torch>=2.8",
+]
+
+# J4 (GOAL contract, 2026-09-29): PyTorch CPU only (D21), never the CUDA wheels of PyPI.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

@@ -1,0 +1,47 @@
+{
+  "name": "a01_sac_hybrid4_q4_async_r05",
+  "description": "J4 speed-up proposal (J4-04..06, 2026-09-30): hybrid4_v1 SAC with the q4 critic (twin critics [s, steer] -> 4 Q-values, one pass for the four-command expectation), asynchronous learner thread (collection and gradient steps in parallel), 0.5 gradient step per transition. Same losses as hybrid4_v1; not validated by any learning result. Not a controlled D25 arm against the historical hybrid runs (critic, schedule and async differ).",
+  "map": "configs/maps/a01.json",
+  "action_codec": "hybrid4_v1",
+  "action_ticks": 5,
+  "speed": 10,
+  "action_timeout_ms": 1000,
+  "seed": 1,
+  "torch_threads": 8,
+  "budget": {
+    "transitions": 69000,
+    "cap_transitions": 69000,
+    "note": "Bounded proposal, user-started run (D37). Same transition budget as the J4 runs; wall time is expected to be shorter, not the learning."
+  },
+  "checkpoint_every_transitions": 10000,
+  "log_transitions": true,
+  "reward": {
+    "progress_scale": 100.0,
+    "time_cost_per_s": 1.0,
+    "finish_bonus": 150.0,
+    "discount_per_second": 0.98,
+    "terminal_potential": "zero"
+  },
+  "reward_status": "trackmania_rl.reward/1 coefficients are a J3 PROPOSITION (J3-02), not approved",
+  "sac": {
+    "net_arch": [
+      256,
+      256
+    ],
+    "learning_rate": 0.0003,
+    "buffer_size": 100000,
+    "learning_starts": 2000,
+    "batch_size": 256,
+    "tau": 0.005,
+    "ent_coef": "auto",
+    "hybrid_critic": "q4"
+  },
+  "learner": {
+    "mode": "async",
+    "updates_per_transition": 0.5,
+    "max_update_lag": 32,
+    "max_wait_ms": 250,
+    "actor_sync_every": 1,
+    "chunk": 4
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "A01-Race",
+  "uid": "BeySZdnfuSh4nHY5xztiXLmlrXe",
+  "checkpoint_count": 3,
+  "checkpoint_count_note": "Counted by OnCheckpointCountChanged, finish included (J1 and J2 reports).",
+  "game_file": "GameData/Tracks/Campaigns/Nations/White/A01-Race.Challenge.Gbx",
+  "game_file_sha256": "f0a870809be99da2cb36ad5df43a2cf63d8f74fe4ac3470ecac68b9e97625dc3",
+  "loading": "manual from the game menu (TMInterface map command did not load A01 in J1)",
+  "episode": {
+    "time_limit_ms": 54220,
+    "time_limit_note": "D27: 2 x reference run 27.11 s (J2 report)",
+    "no_progress_ms": 5000,
+    "no_progress_note": "D27: abandon when the episode max of Progress is not beaten for 5 s simulated",
+    "no_progress_min_gain_m": 0.01
+  },
+  "reference": {
+    "raw": "data/maps/a01/reference_raw.json",
+    "raw_content_sha256": "06cdb0ec48c166b5dc956e181b94629f846f428e2de0e466a52f2753a282b037",
+    "prepared": "data/maps/a01/reference_prepared.json",
+    "prepared_content_sha256": "940143ce8f242f594b81b9606ca2d0f13d86c50136ed0a925c88caf4380d702e",
+    "normalization": "data/maps/a01/normalization_v1.json",
+    "normalization_content_sha256": "348e9de2076a9071c028aa04f7b6c26ded90503458430b5b91764978cd401ed9",
+    "source": "real human run, runs/j2/20260929-142031-human/trace.jsonl attempt 1 (27.11 s)",
+    "hash_note": "content_sha256 = SHA-256 of the canonical JSON without the sha256 field, checked at load"
+  }
+}
